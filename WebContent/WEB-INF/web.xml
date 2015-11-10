@@ -3,14 +3,44 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
 	version="3.0">
 
-  <display-name>Hello Java</display-name>
-  <servlet>
-    <servlet-name>javax.ws.rs.core.Application</servlet-name>
-    <load-on-startup>1</load-on-startup>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>javax.ws.rs.core.Application</servlet-name>
-    <url-pattern>/api/*</url-pattern>
-  </servlet-mapping>
-
+	<display-name>Franklin Bluemix Demo</display-name>
+  	<servlet>
+        <servlet-name>javax.ws.rs.core.Application</servlet-name>
+        <load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+        <servlet-name>javax.ws.rs.core.Application</servlet-name>
+        <url-pattern>/api/*</url-pattern>
+    </servlet-mapping>
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+	<servlet>
+        <description/>
+        <display-name>UserController</display-name>
+        <servlet-name>UserController</servlet-name>
+        <servlet-class>com.ibm.controller.UserController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UserController</servlet-name>
+        <url-pattern>/UserController</url-pattern>
+    </servlet-mapping>
+    <servlet>
+    	<display-name>QAController</display-name>
+		<servlet-name>QAController</servlet-name>
+		<servlet-class>com.ibm.controller.QAController</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>QAController</servlet-name>
+		<url-pattern>/QAController</url-pattern>
+	</servlet-mapping>
+	    <servlet>
+    	<display-name>LTController</display-name>
+		<servlet-name>LTController</servlet-name>
+		<servlet-class>com.ibm.controller.LTController</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>LTController</servlet-name>
+		<url-pattern>/LTController</url-pattern>
+	</servlet-mapping>
 </web-app>

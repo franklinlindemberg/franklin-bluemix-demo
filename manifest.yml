@@ -1,8 +1,13 @@
 applications:
-- path: JavaHelloWorldApp.war
+- path: FranklinBluemixDemoApp.war
   memory: 512M
   instances: 1
   domain: mybluemix.net
   name: franklin-bluemix-demo
   host: franklin-bluemix-demo
   disk_quota: 1024M
+services:
+  - SQL-bluemix-demo
+  - Alchemy-bluemix-demo
+  - QA-bluemix-demo
+  - LT-bluemix-demo
