@@ -46,6 +46,15 @@
             <src path="src"/>
             <classpath refid="classpathDir"/>
         </javac>
+    	<copy todir="WebContent/WEB-INF/lib">
+    		<fileset file="dep-jar/db2jcc.jar"/>
+    		<fileset file="dep-jar/nosqljson.jar"/>
+    		<fileset file="dep-jar/fluent-hc-4.3.4.jar"/>
+    		<fileset file="dep-jar/httpclient-4.3.4.jar"/>
+    		<fileset file="dep-jar/httpcore-4.3.2.jar"/>
+    		<fileset file="dep-jar/jackson-all-1.9.0.jar"/>
+    		<fileset file="dep-jar/commons-codec-1.6.jar"/>
+    	</copy>
     </target>
   	<target name="build-war" depends="build-project">
   		<war destfile="${ARCHIVE_DIR}/${warname}" webxml="WebContent/WEB-INF/web.xml">
@@ -58,7 +67,4 @@
 			<classes dir="bin"/>
 	  	</war>
    	</target>
-	
-	
-
 </project>

@@ -26,6 +26,15 @@
         <url-pattern>/UserController</url-pattern>
     </servlet-mapping>
     <servlet>
+    	<display-name>AlchemyController</display-name>
+		<servlet-name>AlchemyController</servlet-name>
+		<servlet-class>com.ibm.controller.AlchemyController</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>AlchemyController</servlet-name>
+		<url-pattern>/AlchemyController</url-pattern>
+	</servlet-mapping>
+    <servlet>
     	<display-name>QAController</display-name>
 		<servlet-name>QAController</servlet-name>
 		<servlet-class>com.ibm.controller.QAController</servlet-class>

@@ -31,11 +31,11 @@ public class AlchemyController extends HttpServlet {
 	/**
 	 * 
 	 */
-	private static Logger logger = Logger.getLogger(LTController.class.getName());
+	private static Logger logger = Logger.getLogger(AlchemyController.class.getName());
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Forward the request to the /watson_api/lt.jsp file
+	 * Forward the request to the /watson_api/alchemy.jsp file
 	 *
 	 * @param req the req
 	 * @param resp the resp
@@ -44,7 +44,7 @@ public class AlchemyController extends HttpServlet {
 	 */
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		req.getRequestDispatcher("/watson_api/lt.jsp").forward(req, resp);
+		req.getRequestDispatcher("/watson_api/alchemy.jsp").forward(req, resp);
 	}
 	
 	/**
@@ -94,31 +94,6 @@ public class AlchemyController extends HttpServlet {
 
 	   	req.getRequestDispatcher("/watson_api/alchemy.jsp").forward(req, resp);
 	}
-	
-	/*@POST
-	@Produces({MediaType.APPLICATION_JSON})
-	public String getInformation(@FormParam("url_source") String urlSource,
-		      @FormParam("alchemy_list") String alchemySelection,
-		      @Context HttpServletResponse servletResponse,
-		      @Context ServletContext context) throws IOException, SAXException,
-              ParserConfigurationException, XPathExpressionException{
-		
-			String path = context.getRealPath("/WEB-INF/classes/keys/api_key.txt");
-			switch(alchemySelection){
-			case "entity_extraction":
-				AlchemyAPI alchemyObj = AlchemyAPI.GetInstanceFromFile(path);
-				Document doc = alchemyObj.URLGetRankedNamedEntities(urlSource);
-				return getStringFromDocument(doc);
-			case "language_detection":
-				break;
-			case "sentiment_analisys":
-				break;
-			default:
-				break;
-			}
-		
-		return null;
-	}*/
 
     // utility method
     private static String getStringFromDocument(Document doc) {

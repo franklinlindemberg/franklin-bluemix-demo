@@ -15,7 +15,7 @@
 		<%@include file="/includes/header.jsp" %>
 		<%@include file="/includes/left_pane.jsp" %>
 		<div class="rightHalf">
-			<form action="/api/AlchemyAPI" id="alchemy_form" method="post">
+			<form action="/AlchemyController" id="alchemy_form" method="post">
 			  	URL a ser analisada:<input type="text" name="url_source">
 			  	<input type="submit">
 			</form>
