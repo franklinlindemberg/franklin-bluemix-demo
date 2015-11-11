@@ -60,16 +60,16 @@ public class QAController extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		logger.info("doPost");
 
-		String question = req.getParameter("questionText");
+		String question = (String) req.getAttribute("questionText");
 		String dataset = req.getParameter("dataset");
 
 		//create the { 'question' : {
 		//	'questionText:'...',
-		//  'evidenceRequest': { 'items': 5} } json as requested by the service
+		//  'evidenceRequest': { 'items': 3} } json as requested by the service
 		JSONObject questionJson = new JSONObject();
 		questionJson.put("questionText",question);
 		JSONObject evidenceRequest = new JSONObject();
-		evidenceRequest.put("items",5);
+		evidenceRequest.put("items",3);
 		questionJson.put("evidenceRequest",evidenceRequest);
 
 		JSONObject postData = new JSONObject();

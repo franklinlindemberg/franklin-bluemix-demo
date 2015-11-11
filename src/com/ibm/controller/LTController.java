@@ -58,44 +58,41 @@ public class LTController extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		logger.info("doPost");
-
-		String modelId = "pt-en";
-		String text = req.getParameter("text");
-
-		//create the {
-		//	'model_id:'...',
-		//  'text': } json as requested by the service
-		JSONObject postData = new JSONObject();
-		postData.put("model_id",modelId);
-		postData.put("text",text);
-
-    	try {
-    		Executor executor = Executor.newInstance().auth(username, password);
-    		URI serviceURI = new URI(baseURL+ "/v2/translate").normalize();
-    		String answersJson = executor.execute(Request.Post(serviceURI)
-			    .addHeader("Accept", "application/json")
-			    .addHeader("X-SyncTimeout", "30")
-			    .bodyString(postData.toString(), ContentType.APPLICATION_JSON)
-			    ).returnContent().asString();
-
-    		ObjectMapper mapper = new ObjectMapper();
-    		LT answer =mapper.readValue(answersJson, LT.class);
-    		
-    		System.out.println(text);
-    		
-			//Send question and answers to index.jsp
-			req.setAttribute("answers", answer);
-			req.setAttribute("text", text);
+		
+		String action = req.getParameter("action");
+		
+		switch(action){
+		case "traduzir_QA":
 			
+			String language = getLanguage(req);
 			
-
-		} catch (Exception e) {
-			// Log something and return an error message
-			logger.log(Level.SEVERE, "got error: "+e.getMessage(), e);
-			req.setAttribute("error", e.getMessage());
+    		switch(language){
+    		case "pt":
+    			LT textTranslated;
+    			req = getTranslation(req, req.getParameter("questionText"), "pt-en");
+    			textTranslated = (LT) req.getAttribute("answers");
+    			System.out.println(textTranslated);
+    			req.setAttribute("question", req.getParameter("questionText"));
+    			req.setAttribute("questionText", textTranslated.getTranslations().get(0).getTranslation());
+    			req.getRequestDispatcher("/QAController").forward(req, resp);
+    			break;
+    		case "en":
+    			req.setAttribute("question", req.getParameter("questionText"));
+    			req.setAttribute("questionText", req.getParameter("questionText"));
+    	    	req.getRequestDispatcher("/QAController").forward(req, resp);
+    			break;
+    		default:
+    			break;
+    		}
+			break;
+		case "traduzir":
+			req = getTranslation(req, req.getParameter("text"), "pt-en");
+			req.setAttribute("text", req.getParameter("text"));
+	    	req.getRequestDispatcher("/watson_api/lt.jsp").forward(req, resp);
+			break;
+		default:
+			break;
 		}
-
-    	req.getRequestDispatcher("/watson_api/lt.jsp").forward(req, resp);
 	}
 
 	@Override
@@ -202,6 +199,125 @@ public class LTController extends HttpServlet {
         public String toString() {
                 return "translation: " + translation;
         }
+    }
+    
+    public static class LAIdentifier{
+    	@JsonProperty("languages")
+    	private List<Languages> languages;
 
+		public List<Languages> getLanguages() {
+			return languages;
+		}
+
+		public void setLanguages(List<Languages> languages) {
+			this.languages = languages;
+		}
+    	
+		@Override
+        public String toString() {
+                return "languages: " + languages.toString();
+        }
+    	
+    }
+    
+    public static class Languages{
+    	@JsonProperty("language")
+    	private String language;
+    	@JsonProperty("confidence")
+    	private String confidence;
+
+		
+		public String getLanguage() {
+			return language;
+		}
+
+		public void setLanguage(String language) {
+			this.language = language;
+		}
+
+		public String getConfidence() {
+			return confidence;
+		}
+
+		public void setConfidence(String confidence) {
+			this.confidence = confidence;
+		}
+
+		@Override
+        public String toString() {
+                return "language: " + language + " \nconfidence: " + confidence;
+        }
+    }
+    
+    private HttpServletRequest getTranslation(HttpServletRequest req, String text, String modelId){
+    	ObjectMapper mapper = new ObjectMapper();
+		LT answerLT;
+		String answersJson;
+		URI serviceURI;
+		Executor executor;
+		
+		//create the {
+		//	'model_id:'...',
+		//  'text': } json as requested by the service
+		JSONObject postData = new JSONObject();
+		postData.put("model_id",modelId);
+		postData.put("text",text);
+
+    	try {
+    		executor = Executor.newInstance().auth(username, password);
+    		serviceURI = new URI(baseURL+ "/v2/translate").normalize();
+    		answersJson = executor.execute(Request.Post(serviceURI)
+			    .addHeader("Accept", "application/json")
+			    .addHeader("X-SyncTimeout", "30")
+			    .bodyString(postData.toString(), ContentType.APPLICATION_JSON)
+			    ).returnContent().asString();
+
+    		answerLT = mapper.readValue(answersJson, LT.class);
+    		
+    		System.out.println(answerLT.toString());
+    		
+			req.setAttribute("answers", answerLT);
+			
+		} catch (Exception e) {
+			// Log something and return an error message
+			logger.log(Level.SEVERE, "got error: "+e.getMessage(), e);
+			req.setAttribute("error", e.getMessage());
+		}
+
+    	return req;
+    }
+    
+    private String getLanguage(HttpServletRequest req){
+    	ObjectMapper mapper = new ObjectMapper();
+    	LAIdentifier answerLAIdentifier;
+		String answersJson;
+		URI serviceURI;
+		Executor executor;
+		String language = null;
+		
+		String question = req.getParameter("questionText");
+		
+		try {
+			executor = Executor.newInstance().auth(username, password);
+			serviceURI = new URI(baseURL+ "/v2/identify").normalize();
+    		answersJson = executor.execute(Request.Post(serviceURI)
+			    .addHeader("Accept", "application/json")
+			    .addHeader("X-SyncTimeout", "30")
+			    .bodyString(question, ContentType.TEXT_PLAIN)
+			    ).returnContent().asString();
+    		
+    		answerLAIdentifier = mapper.readValue(answersJson, LAIdentifier.class);
+    		
+    		language = answerLAIdentifier.getLanguages().get(0).getLanguage();
+    		
+    		return language;
+    		
+		}
+		catch (Exception e) {
+			// Log something and return an error message
+			logger.log(Level.SEVERE, "got error: "+e.getMessage(), e);
+			req.setAttribute("error", e.getMessage());
+		}
+		return language;
     }
 }

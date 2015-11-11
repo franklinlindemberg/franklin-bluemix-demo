@@ -2,7 +2,7 @@
    	<table style = "float: left;">
 		<tr>
 			<td>
-                   <img style="width:150px; height:70px;" src="/images/bluemix.png" alt="IBM Bluemix">
+                   <img style="width:150px; height:70px;" src="/images/bluemix.jpg" alt="IBM Bluemix">
                </td>
 		</tr>
 		<tr>
@@ -14,13 +14,13 @@
 	<table style = "float:right;">
 		<tr>
 			<td>
-				<img style="width:70px; height:70px;" src="/images/AlchemyAPI.png" alt="Alchemy API">
-               </td>
+				<img style="width:70px; height:70px;" src="/images/alchemy.png" alt="Alchemy API">
+            </td>
 		</tr>
 		<tr>
 			<td>
 				<a href="www.alchemyapi.com">Text Analysis by AlchemyAPI</a>
-               </td>
+            </td>
 		</tr>
 	</table>
 </div>
