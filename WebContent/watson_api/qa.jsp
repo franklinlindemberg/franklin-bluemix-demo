@@ -18,7 +18,7 @@
 		<div class="rightHalf">
 			<div>
 				<img style="width:70px; height:70px;" src="/images/qa.png">
-				<h2 style="display:inline">Perguntas e Respostas Watson API</h2>
+				<h2 style="display:inline">Questions & Answers Watson API</h2>
 				<p>A API de questions and answers possibilita a colocar perguntas sobre o dominio "Viagens" ou "Medicina"
 				e obter respostas a partir do Watson, cada uma com o seu grau de confiança.</p>
 				<p>Para este demo foi implantado a API de questions and answers onde é possível realizar as perguntas tanto em
@@ -50,7 +50,8 @@
 						</div>
 						<div>
 							<div style="padding:5px;">
-								<input style="width:600px; height: 20px; padding-left:5px;" id="questionText" name="questionText" placeholder="Type a question..."
+								<input style="width:600px; height: 20px; padding-left:5px;" id="questionText" name="questionText" 
+								placeholder="Escreva uma pergunta (em português ou inglês)"
 									 autofocus value="${question}">
 							</div>
 							<div style="padding:5px;">

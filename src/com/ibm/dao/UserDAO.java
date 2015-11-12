@@ -8,6 +8,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/*
+ * Classe DAO que possui os metodos de acesso ao banco de dados na tabela USER
+ */
+
 public class UserDAO {
 
     private Connection connection = SQLUtil.getConnection();;

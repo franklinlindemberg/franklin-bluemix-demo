@@ -2,7 +2,6 @@ package com.ibm.controller;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -15,11 +14,16 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.http.client.fluent.Executor;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ContentType;
-import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import com.ibm.json.java.JSONArray;
 import com.ibm.json.java.JSONObject;
+
+import com.ibm.Beans.*;
+
+/*
+ * Classe Controller que receberá as requisições da pagina lt.jsp, chamará a API language translation e redirecionará a resposta.
+ */
 
 @MultipartConfig
 public class LTController extends HttpServlet {
@@ -61,21 +65,31 @@ public class LTController extends HttpServlet {
 		
 		String action = req.getParameter("action");
 		
+		/*
+		 * verifica qual ação foi solicitada:
+		 * - chamada da pagina qa.jsp (traduzira o conteudo para chamar a api questions and answers)
+		 * - chamada da pagina lt.jsp (apenas traduzira o texto)
+		 */
 		switch(action){
 		case "traduzir_QA":
 			
+			// verifica em qual lingua se encontra o texto
 			String language = getLanguage(req);
 			
+			System.out.println("Lingua original do texto: " + language);
+			
     		switch(language){
+    		// caso seja em português, o texto será traduzido para ingles e sera feito o redirecionamento para o QAController
     		case "pt":
-    			LT textTranslated;
+    			LTBean textTranslated;
     			req = getTranslation(req, req.getParameter("questionText"), "pt-en");
-    			textTranslated = (LT) req.getAttribute("answers");
-    			System.out.println(textTranslated);
+    			textTranslated = (LTBean) req.getAttribute("answers");
+    			System.out.println("Texto traduzido: " + textTranslated);
     			req.setAttribute("question", req.getParameter("questionText"));
     			req.setAttribute("questionText", textTranslated.getTranslations().get(0).getTranslation());
     			req.getRequestDispatcher("/QAController").forward(req, resp);
     			break;
+    		// caso seja em ingles, apenas redireciona para o QAController
     		case "en":
     			req.setAttribute("question", req.getParameter("questionText"));
     			req.setAttribute("questionText", req.getParameter("questionText"));
@@ -146,112 +160,11 @@ public class LTController extends HttpServlet {
         return sysEnv;
     }
     
-    public static class LT{
-    	@JsonProperty("word_count")
-    	private Integer word_count;
-    	@JsonProperty("character_count")
-		private Integer character_count;
-    	@JsonProperty("translations")
-		private List<Translations> translations;
-        
-        public Integer getWord_count() {
-			return word_count;
-		}
-		public void setWord_count(Integer word_count) {
-			this.word_count = word_count;
-		}
-		
-		public Integer getCharacter_count() {
-			return character_count;
-		}
-		public void setCharacter_count(Integer character_count) {
-			this.character_count = character_count;
-		}
-
-		public List<Translations> getTranslations() {
-			return translations;
-		}
-		public void setTranslations(List<Translations> translations) {
-			this.translations = translations;
-		}
-		
-		@Override
-        public String toString() {
-                return "word_count: " + word_count + "\n character_count: " + character_count + 
-                		"\n Translations: " + translations.toString();
-        }
-        
-    }
-    
-    public static class Translations{
-    	@JsonProperty("translation")
-    	private String translation;
-
-		public String getTranslation() {
-			return translation;
-		}
-
-		public void setTranslation(String translation) {
-			this.translation = translation;
-		}
-		
-		@Override
-        public String toString() {
-                return "translation: " + translation;
-        }
-    }
-    
-    public static class LAIdentifier{
-    	@JsonProperty("languages")
-    	private List<Languages> languages;
-
-		public List<Languages> getLanguages() {
-			return languages;
-		}
-
-		public void setLanguages(List<Languages> languages) {
-			this.languages = languages;
-		}
-    	
-		@Override
-        public String toString() {
-                return "languages: " + languages.toString();
-        }
-    	
-    }
-    
-    public static class Languages{
-    	@JsonProperty("language")
-    	private String language;
-    	@JsonProperty("confidence")
-    	private String confidence;
-
-		
-		public String getLanguage() {
-			return language;
-		}
-
-		public void setLanguage(String language) {
-			this.language = language;
-		}
-
-		public String getConfidence() {
-			return confidence;
-		}
-
-		public void setConfidence(String confidence) {
-			this.confidence = confidence;
-		}
-
-		@Override
-        public String toString() {
-                return "language: " + language + " \nconfidence: " + confidence;
-        }
-    }
-    
+    //metodo que realiza a tradução do texto passado como parametro
+    // recebe como parametros o texto, e o depara da traducao
     private HttpServletRequest getTranslation(HttpServletRequest req, String text, String modelId){
     	ObjectMapper mapper = new ObjectMapper();
-		LT answerLT;
+		LTBean answerLT ;
 		String answersJson;
 		URI serviceURI;
 		Executor executor;
@@ -272,9 +185,8 @@ public class LTController extends HttpServlet {
 			    .bodyString(postData.toString(), ContentType.APPLICATION_JSON)
 			    ).returnContent().asString();
 
-    		answerLT = mapper.readValue(answersJson, LT.class);
-    		
-    		System.out.println(answerLT.toString());
+    		// faz o parse da resposta para json
+    		answerLT = mapper.readValue(answersJson, LTBean.class);
     		
 			req.setAttribute("answers", answerLT);
 			
@@ -287,9 +199,10 @@ public class LTController extends HttpServlet {
     	return req;
     }
     
+    // metodo que verifica em qual lingua se encontra o texto
     private String getLanguage(HttpServletRequest req){
     	ObjectMapper mapper = new ObjectMapper();
-    	LAIdentifier answerLAIdentifier;
+    	LTIdentifierBean answerLAIdentifier;
 		String answersJson;
 		URI serviceURI;
 		Executor executor;
@@ -306,7 +219,8 @@ public class LTController extends HttpServlet {
 			    .bodyString(question, ContentType.TEXT_PLAIN)
 			    ).returnContent().asString();
     		
-    		answerLAIdentifier = mapper.readValue(answersJson, LAIdentifier.class);
+    		// faz o parse da resposta para json
+    		answerLAIdentifier = mapper.readValue(answersJson, LTIdentifierBean.class);
     		
     		language = answerLAIdentifier.getLanguages().get(0).getLanguage();
     		

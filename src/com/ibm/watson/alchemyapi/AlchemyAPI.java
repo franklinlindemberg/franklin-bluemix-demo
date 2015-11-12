@@ -132,7 +132,7 @@ public class AlchemyAPI {
     	CheckURL(url);
     	
     	params.setUrl(url);
-
+    	
     	return GET("URLGetRankedNamedEntities", "url", params);
     }
 

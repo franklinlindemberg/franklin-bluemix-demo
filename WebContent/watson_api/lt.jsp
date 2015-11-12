@@ -18,7 +18,7 @@
 		<div class="rightHalf">
 			<div>
 				<img style="width:70px; height:70px;" src="/images/lt.png">
-				<h2 style="display:inline">Perguntas e Respostas Watson API</h2>
+				<h2 style="display:inline">Language Translation Watson API</h2>
 				<p>A API de language translation permite que palavras e sentenças sejam traduzidas entre diversas linguas. 
 				É possível também retroalimentar o sistema a fim de melhorar o grau de acerto nas traduções.</p>
 				<p>Para este demo foi implantada a tradução entre português e inglês. Para utilizar basta inserir na caixa 
@@ -26,7 +26,7 @@
 				</p>
 			</div>
 			<div>
-				<form id='qaForm' method="post" action="/LTController">
+				<form id='ltForm' method="post" action="/LTController">
 					<fieldset>
 						<input type="hidden" name="action" value="traduzir" />
 						<div>

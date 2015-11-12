@@ -24,6 +24,9 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+/*
+ * Classe Controller que receberá as requisições da pagina alchemy.jsp, chamará a API alchemy e redirecionará a resposta.
+ */
 
 @MultipartConfig
 public class AlchemyController extends HttpServlet {
@@ -48,7 +51,7 @@ public class AlchemyController extends HttpServlet {
 	}
 	
 	/**
-	 * Translation API
+	 * Alchemy API
 	 *
 	 *
 	 * @param req the Http Servlet request
@@ -62,28 +65,41 @@ public class AlchemyController extends HttpServlet {
 
 		String alchemySelection = req.getParameter("alchemy_list");
 		String urlSource = req.getParameter("url_source");
-		String ret = null;
+		String answer = null;
 		ServletContext context = req.getServletContext();
+		AlchemyAPI alchemyObj;
+		Document doc;
 
 	   	try {
+	   		// lê a api_key da api alchemy. Necessária para realizar as chamadas a API
 	   		String path = context.getRealPath("/WEB-INF/classes/keys/api_key.txt");
+	   		
+	   		// verifica qual tipo de chamada será feita na API
 			switch(alchemySelection){
 			case "entity_extraction":
-				AlchemyAPI alchemyObj = AlchemyAPI.GetInstanceFromFile(path);
-				Document doc = alchemyObj.URLGetRankedNamedEntities(urlSource);
-				ret = getStringFromDocument(doc);
-			case "language_detection":
+				alchemyObj = AlchemyAPI.GetInstanceFromFile(path);
+				doc = alchemyObj.URLGetRankedNamedEntities(urlSource);
+				answer = getStringFromDocument(doc);
+				break;
+			case "image_tagging":
+				alchemyObj = AlchemyAPI.GetInstanceFromFile(path);
+				doc = alchemyObj.URLGetRankedImageKeywords(urlSource);
+				answer = getStringFromDocument(doc);
 				break;
 			case "sentiment_analisys":
+				alchemyObj = AlchemyAPI.GetInstanceFromFile(path);
+				doc = alchemyObj.URLGetTextSentiment(urlSource);
+				answer = getStringFromDocument(doc);
 				break;
 			default:
 				break;
 			}
    		
-			//Send question and answers to index.jsp
-			req.setAttribute("answers", ret);
+			// redireciona as variaveis de volta para a pagina como atributo
+			req.setAttribute("answers", answer);
+			req.setAttribute("site", urlSource);
 			
-			System.out.println(ret);
+			System.out.println("Resposta: " + answer);
 			
 
 		} catch (Exception e) {
@@ -92,6 +108,7 @@ public class AlchemyController extends HttpServlet {
 			req.setAttribute("error", e.getMessage());
 		}
 
+	   	//redirecionara de volta para a pagina alchemy.jsp
 	   	req.getRequestDispatcher("/watson_api/alchemy.jsp").forward(req, resp);
 	}
 

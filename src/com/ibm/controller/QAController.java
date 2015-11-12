@@ -22,6 +22,10 @@ import org.apache.http.entity.ContentType;
 import com.ibm.json.java.JSONArray;
 import com.ibm.json.java.JSONObject;
 
+/*
+ * Classe Controller que receberá as requisições da pagina LTController, chamará a API de quations and answers e redirecionará a resposta.
+ */
+
 @MultipartConfig
 public class QAController extends HttpServlet {
 	private static Logger logger = Logger.getLogger(QAController.class.getName());
@@ -74,6 +78,8 @@ public class QAController extends HttpServlet {
 
 		JSONObject postData = new JSONObject();
     	postData.put("question",questionJson);
+    	
+    	System.out.println("Pergunda Q&A: " + question);
 
     	try {
     		Executor executor = Executor.newInstance().auth(username, password);
@@ -83,10 +89,14 @@ public class QAController extends HttpServlet {
 			    .addHeader("X-SyncTimeout", "30")
 			    .bodyString(postData.toString(), ContentType.APPLICATION_JSON)
 			    ).returnContent().asString();
+    		
+    		System.out.println("Resposta Q&A: " + answersJson);
 
 			List<Map<String, String>> answers = formatAnswers(answersJson);
+			
+			System.out.println("Retorno Q&A: " + answers);
 
-			//Send question and answers to index.jsp
+			//Send question and answers to qa.jsp
 			req.setAttribute("answers", answers);
 			req.setAttribute("questionText", question);
 			req.setAttribute("dataset", dataset);
@@ -126,7 +136,7 @@ public class QAController extends HttpServlet {
 				ret.add(map);
 			}
 		} catch (IOException e) {
-    	 logger.log(Level.SEVERE, "Error parsing the response: "+e.getMessage(), e);
+			logger.log(Level.SEVERE, "Error parsing the response: "+e.getMessage(), e);
        }
 		return ret;
 	}

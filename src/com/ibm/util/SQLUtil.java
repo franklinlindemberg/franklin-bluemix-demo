@@ -9,6 +9,10 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Set;
 
+/*
+ * classe que gerencia as conexoes ao banco de dados
+ */
+
 public class SQLUtil {
 
     private static Connection connection = null;

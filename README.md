@@ -1,18 +1,9 @@
-# Java Hello World Web Starter Overview
+# Franklin-bluemix-demo
 
-The Java Hello World Web Starter demonstrates a simple, reusable Java web application.
-
-## Run the app locally
-
-1. Download and extract [Apache Ant][]
-2. Add the extracted `bin` directory to your PATH environment variable
-3. Download and extract [WAS Liberty with Java EE 7 Web Profile with Java 8][]
-4. cd into the extracted directory and run `wlp/bin/server start` to create and start a server
-5. Download and extract the starter code from the Bluemix UI
-6. cd into the app directory
-7. Build the app by running `ant`
-8. Copy the resulting WAR file to `wlp/usr/servers/defaultServer/dropins`
-9. Access the running app in a browser at http://localhost:9080/JavaHelloWorldApp
-
-[Apache Ant]: https://ant.apache.org/bindownload.cgi
-[WAS Liberty with Java EE 7 Web Profile with Java 8]: https://developer.ibm.com/wasdev/downloads/liberty-profile-using-non-eclipse-environments/
+	Este demo tem como objetivo testar a plataforma de cloud Bluemix da IBM e bem como alguns dos seus componentes.
+	Os componentes utilizados para o demo foram:
+		SQL
+		Language Translation Watson API
+		Questions and Answers Watson API
+		Alchemy Watson API
+	Para utilizar este demo deve-se inicialmente realizar o cadastro ou utilizar o usuário admin (senha admin). Em seguida é possível escolher a API desejada e seguir as instruções da página de cada API.

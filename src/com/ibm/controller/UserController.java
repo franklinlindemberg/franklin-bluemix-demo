@@ -12,6 +12,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+/*
+ * Classe Controller que receberá as chamadas de cadastro de usuário
+ */
+
 public class UserController extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private final UserDAO dao;
@@ -37,6 +41,7 @@ public class UserController extends HttpServlet {
     	user.setEmail(request.getParameter("email"));
     	user.setPassword(request.getParameter("password"));
         
+    	// caso seja solicitado o cadastro do usuário
         if(request.getParameter("action").toString().equals("cadastrar"))
         {
         	user.setFirstName(request.getParameter("firstName"));
@@ -49,12 +54,14 @@ public class UserController extends HttpServlet {
         }
         else
         {
+        	// caso seja apenas solocitado o login do usuario
         	if(request.getParameter("action").toString().equals("entrar"))
         	{
         		int result = dao.loginUser(user);
         		
         		if(result == 1){
         			HttpSession session = request.getSession();
+        			//cria a sessao na pagina, permitindo o usuario visitar as outras paginas
         			session.setAttribute("user", user.getEmail());
         			request.setAttribute("msg", "Login realizado com sucesso");
         			view = request.getRequestDispatcher("/index.jsp");

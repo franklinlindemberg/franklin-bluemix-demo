@@ -3,6 +3,9 @@ package com.ibm.main;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 
+/*
+ * dummy class.
+ */
 
 @Path("/hello")
 public class HelloResource {

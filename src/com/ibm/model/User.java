@@ -2,6 +2,10 @@ package com.ibm.model;
 
 import java.io.Serializable;
 
+/*
+ * classe que possui o modelo de dados do tipo usuario
+ */
+
 public class User implements Serializable {
     private static final long serialVersionUID = 1L;
     private Integer id;

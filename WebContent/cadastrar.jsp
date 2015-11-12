@@ -11,8 +11,6 @@
 		<%@include file="/includes/left_pane.jsp" %>
 		<div class="rightHalf">
 	     	<div>
-				<img style="width:70px; height:70px;" src="/images/app.png">
-				<h2 style="display:inline">Perguntas e Respostas Watson API</h2>
 				<p>Cadastre-se aqui para utilizar o demo!
 				</p>
 			</div>
